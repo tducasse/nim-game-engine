@@ -1,0 +1,7 @@
+template
+externals
+nimcache
+build/web/*[.wasm, .js, .html]
+build/desktop/windows/*[.exe]
+build/desktop/windows/*.dll
+build/desktop/linux/nimgame
