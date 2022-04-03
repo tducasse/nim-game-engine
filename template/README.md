@@ -6,7 +6,10 @@
 ## Usage
 First, setup the project with:
 ```sh
+# WSL
 nimble setup
+# windows
+nimble -d:win setup
 ```
 Run the web version with:
 ```sh
