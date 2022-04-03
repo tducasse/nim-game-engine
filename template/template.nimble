@@ -1,10 +1,10 @@
 # Package
 
-version       = "0.1.0"
-author        = "Thibaud Ducasse"
-description   = "A new awesome nimble package"
-license       = "MIT"
-srcDir        = "src"
+version = "0.1.0"
+author = "Thibaud Ducasse"
+description = "A new awesome nimble package"
+license = "MIT"
+srcDir = "src"
 
 
 # Dependencies
@@ -22,18 +22,18 @@ task emsdkSetup, "Download Emsdk":
   exec "cd externals/emsdk && ./emsdk install latest && ./emsdk activate latest"
 
 task sdlSetup, "Install SDL2":
-    when defined(win):
-        if not fileExists("build/desktop/windows/SDL2.dll"):
-            if not fileExists("SDL2_x64.zip"):
-                exec "curl -L -o SDL2_x64.zip https://www.libsdl.org/release/SDL2-2.0.20-win32-x64.zip"
-            if defined(windows) and findExe("tar") != "":
-                exec "tar -C build/desktop/windows -xf SDL2_x64.zip SDL2.dll"
-            else:
-                exec "unzip SDL2_x64.zip SDL2.dll -d build/desktop/windows"
-            if fileExists("SDL2_x64.zip"):
-                rmFile("SDL2_x64.zip")
-    else:
-        exec "sudo apt install libsdl2-dev -y"
+  when defined(win):
+    if not fileExists("build/desktop/windows/SDL2.dll"):
+      if not fileExists("SDL2_x64.zip"):
+        exec "curl -L -o SDL2_x64.zip https://www.libsdl.org/release/SDL2-2.0.20-win32-x64.zip"
+      if defined(windows) and findExe("tar") != "":
+        exec "tar -C build/desktop/windows -xf SDL2_x64.zip SDL2.dll"
+      else:
+        exec "unzip SDL2_x64.zip SDL2.dll -d build/desktop/windows"
+      if fileExists("SDL2_x64.zip"):
+        rmFile("SDL2_x64.zip")
+  else:
+    exec "sudo apt install libsdl2-dev -y"
 
 task setup, "Fetch dependencies":
   when defined(win):
@@ -52,11 +52,11 @@ task web, "Build for web":
 
 task desktop, "Build for desktop":
   when defined(win):
-      if not fileExists("build/desktop/windows/SDL2.dll"):
-        exec "nimble -d:win sdlSetup"
-      exec "nim c -o:build/desktop/windows/template.exe --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc --cpu:amd64 --os:windows src/template"
+    if not fileExists("build/desktop/windows/SDL2.dll"):
+      exec "nimble -d:win sdlSetup"
+    exec "nim c -o:build/desktop/windows/template.exe --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc --cpu:amd64 --os:windows src/template"
   else:
-      exec "nim c -o:build/desktop/linux/template src/template"
+    exec "nim c -o:build/desktop/linux/template src/template"
 
 before play:
   when defined(win):
