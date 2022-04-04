@@ -16,10 +16,11 @@ requires "nimhttpd >= 1.2.0"
 
 
 # Tasks
-
-task emsdkSetup, "Download Emsdk":
+task emsdkDownload, "Download Emsdk":
   if not dirExists("externals/emsdk"):
     exec "git clone https://github.com/emscripten-core/emsdk.git externals/emsdk"
+
+task emsdkSetup, "Setup Emsdk":
   exec "cd externals/emsdk && ./emsdk install latest && ./emsdk activate latest"
 
 task sdlSetup, "Install SDL2":
@@ -39,10 +40,10 @@ task setup, "Fetch dependencies":
   exec "nimble install -y"
 
 task web, "Build for web":
-  when defined(windows):
-    exec "cd externals/emsdk && ./emsdk_env.bat && cd ../.. && nim c -d:web src/sample_game"
-  else:
-    exec "cd externals/emsdk && . ./emsdk_env.sh && cd ../.. && nim c -d:web src/sample_game"
+  exec "cd externals/emsdk && . ./emsdk_env.sh && cd ../.. && nim c -d:web src/sample_game"
+
+task windows, "Run for windows":
+  exec "nim c -r -o:build/desktop/sample_game.exe src/sample_game"
 
 task desktop, "Build for desktop":
   if not fileExists("build/desktop/SDL2.dll"):
