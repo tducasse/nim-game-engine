@@ -34,7 +34,6 @@ cd externals/emsdk
 ./emsdk activate latest
 ```
 Before compiling for web, you'll have to reactivate the env (once per terminal):
- the emscripten env:
 ```sh
 cd externals/emsdk
 ./emsdk_env.bat
