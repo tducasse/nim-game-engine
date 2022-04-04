@@ -6,6 +6,7 @@ description = "A new awesome nimble package"
 license = "MIT"
 srcDir = "src"
 
+mode = ScriptMode.Verbose
 
 # Dependencies
 
