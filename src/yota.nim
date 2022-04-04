@@ -53,7 +53,7 @@ proc loop() {.cdecl.} =
     return
   lastTime = newTime
   when defined(web):
-    if not game.inputs[Input.quit]:
+    if "quit" notin game.inputs:
       emscripten_cancel_main_loop()
   game.renderer.clear()
   game.draw(game)
