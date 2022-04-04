@@ -14,7 +14,6 @@ type
     inputMap: Table[Scancode, string]
 
 
-
 when defined(web):
   proc emscripten_set_main_loop(fun: proc() {.cdecl.}, fps,
     simulate_infinite_loop: cint) {.header: "<emscripten.h>".}
