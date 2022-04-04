@@ -7,10 +7,10 @@ if defined(web):
   --cpu: wasm32 # Emscripten is 32bits.
   --cc: clang # Emscripten is very close to clang, so we ill replace it.
   when defined(windows):
-    --clang.exe: emcc.bat # Replace C
-    --clang.linkerexe: emcc.bat # Replace C linker
-    --clang.cpp.exe: emcc.bat # Replace C++
-    --clang.cpp.linkerexe: emcc.bat # Replace C++ linker.
+    --clang.exe: "externals/emsdk/upstream/emscripten/emcc.bat"
+    --clang.linkerexe: "externals/emsdk/upstream/emscripten/emcc.bat"
+    --clang.cpp.exe: "externals/emsdk/upstream/emscripten/emcc.bat"
+    --clang.cpp.linkerexe: "externals/emsdk/upstream/emscripten/emcc.bat"
   else:
     --clang.exe: emcc # Replace C
     --clang.linkerexe: emcc # Replace C linker
