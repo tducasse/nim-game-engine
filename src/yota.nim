@@ -1,4 +1,19 @@
 import sdl2
+import tables
+import sets
+
+export sdl2.Scancode
+
+
+type
+  Game* = ref object
+    renderer: RendererPtr
+    update: proc(game: Game)
+    draw: proc(game: Game)
+    inputs: HashSet[string]
+    inputMap: Table[Scancode, string]
+
+
 
 when defined(web):
   proc emscripten_set_main_loop(fun: proc() {.cdecl.}, fps,
@@ -7,55 +22,72 @@ when defined(web):
 
 
 var window: WindowPtr
-var render: RendererPtr
-var runGame = true
+var renderer: RendererPtr
 var lastTime = getTicks()
 var fps = 60
-var update: proc()
-var draw: proc()
+var game*: Game = new Game
 
 
-proc process_input() =
-  var evt = sdl2.defaultEvent
-  while pollEvent(evt):
-    if evt.kind == QuitEvent:
-      runGame = false
-      break
+proc handleInput(game: Game) =
+  var event = sdl2.defaultEvent
+  while pollEvent(event):
+    case event.kind
+    of QuitEvent:
+      game.inputs = game.inputs + toHashSet(["quit"])
+    of KeyDown:
+      game.inputs = game.inputs + toHashSet([
+        game.inputMap[event.key.keysym.scancode]
+      ])
+    of KeyUp:
+      game.inputs.excl(game.inputMap[event.key.keysym.scancode])
+    else:
+      discard
 
 
 proc loop() {.cdecl.} =
-  update()
-  process_input()
+  game.update(game)
+  handleInput(game)
   var newTime = getTicks()
   if float(newTime - lastTime) < (1000 / fps):
     return
   lastTime = newTime
   when defined(web):
-    if not runGame:
+    if not game.inputs[Input.quit]:
       emscripten_cancel_main_loop()
-  draw()
+  game.renderer.clear()
+  game.draw(game)
+  game.renderer.present()
 
 
-proc setup() =
+proc run(game: Game, width: cint = 640, height: cint = 480,
+    title: cstring = "Yota game") =
   discard sdl2.init(INIT_VIDEO or INIT_AUDIO or INIT_TIMER or INIT_JOYSTICK or
     INIT_GAMECONTROLLER or INIT_EVENTS)
-  window = createWindow("SDL Skeleton", SDL_WINDOWPOS_CENTERED,
-      SDL_WINDOWPOS_CENTERED, 640, 480, SDL_WINDOW_SHOWN or SDL_WINDOW_OPENGL)
-  render = createRenderer(window, -1, Renderer_Accelerated or
+  defer: sdl2.quit()
+
+  window = createWindow(title, SDL_WINDOWPOS_CENTERED,
+      SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_SHOWN or SDL_WINDOW_OPENGL)
+  defer: window.destroy()
+
+  renderer = createRenderer(window, -1, Renderer_Accelerated or
       Renderer_PresentVsync or Renderer_TargetTexture)
-  discard render.setLogicalSize(640, 480)
+  game.renderer = renderer
+  discard renderer.setLogicalSize(width, height)
+  defer: renderer.destroy()
 
   when defined(web):
     emscripten_set_main_loop(loop, 0, 1)
   else:
-    while runGame:
+    while "quit" notin game.inputs:
       loop()
 
-  destroy render
-  destroy window
 
-
-proc run*(updateFunc: proc, drawFunc: proc) =
-  update = updateFunc
-  draw = drawFunc
-  setup()
+proc start*(
+   update: proc(game: Game),
+   draw: proc(game: Game),
+   inputMap: Table[Scancode, string],
+   title: cstring) =
+  game.update = update
+  game.draw = draw
+  game.inputMap = inputMap
+  game.run(title = title)

@@ -22,52 +22,36 @@ task emsdkSetup, "Download Emsdk":
   exec "cd externals/emsdk && ./emsdk install latest && ./emsdk activate latest"
 
 task sdlSetup, "Install SDL2":
-  when defined(win):
-    if not fileExists("build/desktop/windows/SDL2.dll"):
-      if not fileExists("SDL2_x64.zip"):
-        exec "curl -L -o SDL2_x64.zip https://www.libsdl.org/release/SDL2-2.0.20-win32-x64.zip"
-      if defined(windows) and findExe("tar") != "":
-        exec "tar -C build/desktop/windows -xf SDL2_x64.zip SDL2.dll"
-      else:
-        exec "unzip SDL2_x64.zip SDL2.dll -d build/desktop/windows"
-      if fileExists("SDL2_x64.zip"):
-        rmFile("SDL2_x64.zip")
-  else:
-    exec "sudo apt install libsdl2-dev -y"
+  if not fileExists("build/desktop/SDL2.dll"):
+    if not fileExists("SDL2_x64.zip"):
+      exec "curl -L -o SDL2_x64.zip https://www.libsdl.org/release/SDL2-2.0.20-win32-x64.zip"
+    if defined(windows) and findExe("tar") != "":
+      exec "tar -C build/desktop -xf SDL2_x64.zip SDL2.dll"
+    else:
+      exec "unzip SDL2_x64.zip SDL2.dll -d build/desktop"
+    if fileExists("SDL2_x64.zip"):
+      rmFile("SDL2_x64.zip")
 
 task setup, "Fetch dependencies":
-  when defined(win):
-    exec "nimble -d:win sdlSetup"
-  else:
-    exec "nimble sdlSetup"
+  exec "nimble sdlSetup"
   emsdkSetupTask()
   exec "nimble install -y"
 
 task web, "Build for web":
-  when defined(win):
-    exec "cd externals/emsdk && ./emsdk_env.bat"
+  when defined(windows):
+    exec "cd externals/emsdk && ./emsdk_env.bat && cd ../.. && nim c -d:web src/sample_game"
   else:
-    exec "cd externals/emsdk && . ./emsdk_env.sh"
-  exec "nim c -d:web src/sample_game"
+    exec "cd externals/emsdk && . ./emsdk_env.sh && cd ../.. && nim c -d:web src/sample_game"
 
 task desktop, "Build for desktop":
-  when defined(win):
-    if not fileExists("build/desktop/windows/SDL2.dll"):
-      exec "nimble -d:win sdlSetup"
-    exec "nim c -o:build/desktop/windows/sample_game.exe --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc --cpu:amd64 --os:windows src/sample_game"
-  else:
-    exec "nim c -o:build/desktop/linux/sample_game src/sample_game"
+  if not fileExists("build/desktop/SDL2.dll"):
+    exec "nimble sdlSetup"
+  exec "nim c -o:build/desktop/sample_game.exe --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc --cpu:amd64 --os:windows src/sample_game"
 
 before play:
-  when defined(win):
-    exec "nimble -d:win desktop"
-  else:
-    exec "nimble desktop"
+  exec "nimble desktop"
 task play, "Run the game":
-  when defined(win):
-    exec "build/desktop/windows/sample_game.exe"
-  else:
-    exec "build/desktop/linux/sample_game"
+  exec "build/desktop/sample_game.exe"
 
 before serve:
   exec "nimble web"
