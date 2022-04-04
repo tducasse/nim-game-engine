@@ -21,6 +21,7 @@ task emsdkDownload, "Download Emsdk":
     exec "git clone https://github.com/emscripten-core/emsdk.git externals/emsdk"
 
 task emsdkSetup, "Setup Emsdk":
+  emsdkDownloadTask()
   exec "cd externals/emsdk && ./emsdk install latest && ./emsdk activate latest"
 
 task sdlSetup, "Install SDL2":
