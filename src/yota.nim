@@ -34,11 +34,13 @@ proc handleInput(game: Game) =
     of QuitEvent:
       game.inputs = game.inputs + toHashSet(["quit"])
     of KeyDown:
-      game.inputs = game.inputs + toHashSet([
-        game.inputMap[event.key.keysym.scancode]
-      ])
+      var key = game.inputMap.getOrDefault(event.key.keysym.scancode, "")
+      if key != "":
+        game.inputs = game.inputs + toHashSet([key])
     of KeyUp:
-      game.inputs.excl(game.inputMap[event.key.keysym.scancode])
+      var key = game.inputMap.getOrDefault(event.key.keysym.scancode, "")
+      if key != "":
+        game.inputs.excl(key)
     else:
       discard
 
