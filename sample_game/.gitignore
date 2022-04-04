@@ -1,4 +1,4 @@
-template
+sample_game
 externals
 nimcache
 build/web/*[.wasm, .js, .html]

@@ -48,15 +48,15 @@ task web, "Build for web":
     exec "cd externals/emsdk && ./emsdk_env.bat"
   else:
     exec "cd externals/emsdk && . ./emsdk_env.sh"
-  exec "nim c -d:web src/template"
+  exec "nim c -d:web src/sample_game"
 
 task desktop, "Build for desktop":
   when defined(win):
     if not fileExists("build/desktop/windows/SDL2.dll"):
       exec "nimble -d:win sdlSetup"
-    exec "nim c -o:build/desktop/windows/template.exe --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc --cpu:amd64 --os:windows src/template"
+    exec "nim c -o:build/desktop/windows/sample_game.exe --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc --cpu:amd64 --os:windows src/sample_game"
   else:
-    exec "nim c -o:build/desktop/linux/template src/template"
+    exec "nim c -o:build/desktop/linux/sample_game src/sample_game"
 
 before play:
   when defined(win):
@@ -65,9 +65,9 @@ before play:
     exec "nimble desktop"
 task play, "Run the game":
   when defined(win):
-    exec "build/desktop/windows/template.exe"
+    exec "build/desktop/windows/sample_game.exe"
   else:
-    exec "build/desktop/linux/template"
+    exec "build/desktop/linux/sample_game"
 
 before serve:
   exec "nimble web"
