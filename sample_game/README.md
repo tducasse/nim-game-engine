@@ -18,6 +18,10 @@ nimble play
 ```
 
 ## Usage on Windows
+Install the deps:
+```sh
+nimble install
+```
 Install sdl:
 ```sh
 nimble sdlSetup
