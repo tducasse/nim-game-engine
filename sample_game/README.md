@@ -45,7 +45,7 @@ nim c -d:web src/sample_game
 ```
 Run the web version:
 ```sh
-nimhttpd build/web -p 8000
+nimhttpd build/web -p:8000
 ```
 Run the windows version:
 ```sh
