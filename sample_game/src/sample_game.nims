@@ -23,6 +23,8 @@ if defined(web):
   --define: noSignalHandler # Emscripten doesn't support signal handlers.
 
   --dynlibOverride: SDL2
+  --dynlibOverride: SDL2_image
 
   # Pass this to Emscripten linker to generate html file scaffold for us.
-  switch("passL", "-o build/web/index.html --shell-file public/index.html -s USE_SDL=2 --preload-file src/assets@/assets")
+  switch("passL", "-o build/web/index.html --shell-file public/index.html -s USE_SDL=2 -s USE_SDL_IMAGE=2 -s SDL2_IMAGE_FORMATS='[\"png\"]' --preload-file src/assets@/src/assets --use-preload-plugins")
+

@@ -1,11 +1,12 @@
 import yota
 import tables
 
+proc init(game: Game) =
+  game.newImage("src/assets/mushroom.png", 0, 0)
+  game.newImage("src/assets/mushroom.png", 200, 200, 0.5, 0.5)
+
 
 proc update(game: Game) = discard
-
-
-proc draw(game: Game) = discard
 
 
 const inputMap = {
@@ -18,7 +19,7 @@ const inputMap = {
 
 
 yota.start(
-  draw = draw,
+  init = init,
   inputMap = inputMap,
   update = update,
   title = "Sample game"

@@ -34,6 +34,15 @@ task sdlSetup, "Install SDL2":
       exec "unzip SDL2_x64.zip SDL2.dll -d build/desktop"
     if fileExists("SDL2_x64.zip"):
       rmFile("SDL2_x64.zip")
+  if not fileExists("build/desktop/SDL2_image.dll") or not fileExists("build/desktop/libpng16-16.dll") or not fileExists("build/desktop/libjpg-9.dll"):
+    if not fileExists("SDL2_image_x64.zip"):
+      exec "curl -L -o SDL2_image_x64.zip https://www.libsdl.org/projects/SDL_image/release/SDL2_image-2.0.5-win32-x64.zip"
+    if defined(windows) and findExe("tar") != "":
+      exec "tar -C build/desktop -xf SDL2_image_x64.zip SDL2_image.dll libjpeg-9.dll libpng16-16.dll"
+    else:
+      exec "unzip SDL2_image_x64.zip SDL2_image.dll libjpeg-9.dll libpng16-16.dll -d build/desktop"
+    if fileExists("SDL2_image_x64.zip"):
+      rmFile("SDL2_image_x64.zip")
 
 task setup, "Fetch dependencies":
   exec "nimble sdlSetup"
