@@ -1,29 +1,12 @@
 import sdl2
 import sdl2/image
+import yota/components/types
+import yota/components/game
 import tables
 import sets
 
-import os
 
 export sdl2.Scancode
-
-
-type
-  Game* = ref object
-    renderer*: RendererPtr
-    update: proc(game: Game)
-    init: proc(game: Game)
-    inputs: HashSet[string]
-    inputMap: Table[Scancode, string]
-    images: seq[Image]
-
-  Image = ref object
-    texture: TexturePtr
-    dest: Rect
-
-
-proc clean(path: string): cstring =
-  result = joinPath("src", "assets", path).cstring
 
 
 when defined(web):
@@ -36,7 +19,7 @@ var window: WindowPtr
 var renderer: RendererPtr
 var lastTime = getTicks()
 var fps = 60
-var game*: Game = new Game
+var g: Game = newGame()
 
 
 proc handleInput(game: Game) =
@@ -44,56 +27,35 @@ proc handleInput(game: Game) =
   while pollEvent(event):
     case event.kind
     of QuitEvent:
-      game.inputs = game.inputs + toHashSet(["quit"])
+      g.inputs = g.inputs + toHashSet(["quit"])
     of KeyDown:
-      var key = game.inputMap.getOrDefault(event.key.keysym.scancode, "")
+      var key = g.inputMap.getOrDefault(event.key.keysym.scancode, "")
       if key != "":
-        game.inputs = game.inputs + toHashSet([key])
+        g.inputs = g.inputs + toHashSet([key])
     of KeyUp:
-      var key = game.inputMap.getOrDefault(event.key.keysym.scancode, "")
+      var key = g.inputMap.getOrDefault(event.key.keysym.scancode, "")
       if key != "":
-        game.inputs.excl(key)
+        g.inputs.excl(key)
     else:
       discard
 
 
-proc newImage*(game: Game, path: string, x, y: cint, scaleX: cfloat = 1,
-    scaleY: cfloat = 1) =
-  var texture = renderer.loadTexture(path.clean)
-  if (texture == nil):
-    echo sdl2.getError()
-  var w: cint
-  var h: cint
-  texture.queryTexture(nil, nil, addr(w), addr(h))
-  var area = rect(x, y, (w.cfloat * scaleX).cint, (h.cfloat * scaleY).cint)
-  game.images.add(Image(texture: texture, dest: area))
-
-
-proc drawImage(img: Image, game: Game) =
-  game.renderer.copy(img.texture, nil, addr(img.dest))
-
-
-proc draw(game: Game) =
-  for img in game.images:
-    img.drawImage(game)
-
-
 proc loop() {.cdecl.} =
-  game.update(game)
-  handleInput(game)
+  g.update(g)
+  handleInput(g)
   var newTime = getTicks()
   if float(newTime - lastTime) < (1000 / fps):
     return
   lastTime = newTime
   when defined(web):
-    if "quit" notin game.inputs:
+    if "quit" notin g.inputs:
       emscripten_cancel_main_loop()
-  game.renderer.clear()
-  game.draw()
-  game.renderer.present()
+  g.renderer.clear()
+  g.draw()
+  g.renderer.present()
 
 
-proc run(game: Game, width: cint = 640, height: cint = 480,
+proc run(g: Game, width: cint = 640, height: cint = 480,
     title: cstring = "Yota game") =
   discard sdl2.init(INIT_VIDEO or INIT_AUDIO or INIT_TIMER or INIT_JOYSTICK or
     INIT_GAMECONTROLLER or INIT_EVENTS)
@@ -109,26 +71,26 @@ proc run(game: Game, width: cint = 640, height: cint = 480,
 
   renderer = createRenderer(window, -1, Renderer_Accelerated or
       Renderer_PresentVsync or Renderer_TargetTexture)
-  game.renderer = renderer
+  g.renderer = renderer
   discard renderer.setLogicalSize(width, height)
   defer:
     renderer.destroy()
 
-  game.init(game)
+  g.init(g)
 
   when defined(web):
     emscripten_set_main_loop(loop, 0, 1)
   else:
-    while "quit" notin game.inputs:
+    while "quit" notin g.inputs:
       loop()
 
 
 proc start*(
-   update: proc(game: Game),
-   init: proc(game: Game),
+   update: proc(g: Game),
+   init: proc(g: Game),
    inputMap: Table[Scancode, string],
    title: cstring) =
-  game.update = update
-  game.init = init
-  game.inputMap = inputMap
-  game.run(title = title)
+  g.update = update
+  g.init = init
+  g.inputMap = inputMap
+  g.run(title = title)

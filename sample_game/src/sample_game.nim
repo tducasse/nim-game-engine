@@ -1,13 +1,14 @@
 import yota
+import yota/components/types
 import tables
+import sample_game/entities/player
 
 
-proc init(game: Game) =
-  game.newImage("mushroom.png", 0, 0)
-  game.newImage("mushroom.png", 200, 200, 0.5, 0.5)
+proc init(g: Game) =
+  discard g.newPlayer(20, 20)
 
 
-proc update(game: Game) = discard
+proc update(g: Game) = discard
 
 
 const inputMap = {

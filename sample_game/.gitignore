@@ -1,8 +1,8 @@
-sample_game
 externals
 nimcache
 build/web/*[.wasm, .js, .html]
 build/desktop/*[.exe]
+build/desktop/sample_game
 build/desktop/*.dll
 build/desktop/linux/nimgame
 build/desktop/src
