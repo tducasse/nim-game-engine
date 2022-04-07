@@ -5,3 +5,4 @@ build/web/*[.wasm, .js, .html]
 build/desktop/*[.exe]
 build/desktop/*.dll
 build/desktop/linux/nimgame
+build/desktop/src

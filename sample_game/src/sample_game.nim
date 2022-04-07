@@ -1,9 +1,10 @@
 import yota
 import tables
 
+
 proc init(game: Game) =
-  game.newImage("src/assets/mushroom.png", 0, 0)
-  game.newImage("src/assets/mushroom.png", 200, 200, 0.5, 0.5)
+  game.newImage("mushroom.png", 0, 0)
+  game.newImage("mushroom.png", 200, 200, 0.5, 0.5)
 
 
 proc update(game: Game) = discard

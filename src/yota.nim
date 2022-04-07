@@ -22,6 +22,10 @@ type
     dest: Rect
 
 
+proc clean(path: string): cstring =
+  result = joinPath("src", "assets", path).cstring
+
+
 when defined(web):
   proc emscripten_set_main_loop(fun: proc() {.cdecl.}, fps,
     simulate_infinite_loop: cint) {.header: "<emscripten.h>".}
@@ -53,9 +57,9 @@ proc handleInput(game: Game) =
       discard
 
 
-proc newImage*(game: Game, path: cstring, x, y: cint, scaleX: cfloat = 1,
+proc newImage*(game: Game, path: string, x, y: cint, scaleX: cfloat = 1,
     scaleY: cfloat = 1) =
-  var texture = renderer.loadTexture(path)
+  var texture = renderer.loadTexture(path.clean)
   if (texture == nil):
     echo sdl2.getError()
   var w: cint

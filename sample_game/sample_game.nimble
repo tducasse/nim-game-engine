@@ -48,16 +48,23 @@ task setup, "Fetch dependencies":
   exec "nimble sdlSetup"
   emsdkSetupTask()
   exec "nimble install -y"
+  exec "nimble assets"
 
 task web, "Build for web":
   exec "cd externals/emsdk && . ./emsdk_env.sh && cd ../.. && nim c -d:web src/sample_game"
 
+task assets, "Bundle assets":
+  rmDir("build/desktop/src")
+  cpDir("src/assets", "build/desktop/src/assets")
+
 task windows, "Run for windows":
+  exec "nimble assets"
   exec "nim c -r -o:build/desktop/sample_game.exe src/sample_game"
 
 task desktop, "Build for desktop":
   if not fileExists("build/desktop/SDL2.dll"):
     exec "nimble sdlSetup"
+  exec "nimble assets"
   exec "nim c -o:build/desktop/sample_game.exe --gcc.exe:x86_64-w64-mingw32-gcc --gcc.linkerexe:x86_64-w64-mingw32-gcc --cpu:amd64 --os:windows src/sample_game"
 
 before play:
