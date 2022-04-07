@@ -40,7 +40,7 @@ proc handleInput(game: Game) =
 
 
 proc loop() {.cdecl.} =
-  g.update(g)
+  g.update()
   handleInput(g)
   var newTime = getTicks()
   if float(newTime - lastTime) < (1000 / fps):
@@ -85,11 +85,9 @@ proc run(g: Game, width: cint = 640, height: cint = 480,
 
 
 proc start*(
-   update: proc(g: Game),
    init: proc(g: Game),
    inputMap: Table[Scancode, string],
    title: cstring) =
-  g.update = update
   g.init = init
   g.inputMap = inputMap
   g.run(title = title)

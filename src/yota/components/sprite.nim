@@ -2,28 +2,37 @@ import types
 import sdl2
 import sdl2/image
 import os
-import tables
 
 
 proc clean(path: string): cstring =
   result = joinPath("src", "assets", path).cstring
 
 
-proc newSprite*(g: Game, path: string, x, y: cint, scaleX: cfloat = 1,
-    scaleY: cfloat = 1): Sprite =
+proc newSprite*(
+  g: Game,
+  this: Entity,
+  path: string,
+  pos: Position,
+  scale: Scale = Scale(x: 1, y: 1)): Sprite =
   var texture = g.renderer.loadTexture(path.clean)
   if (texture == nil):
     echo sdl2.getError()
+  new result
+  result.image = texture
+  result.scale = scale
+  result.position = pos
+
+
+method draw*(
+  sprite: Sprite,
+  g: Game,
+) {.base.} =
   var w: cint
   var h: cint
-  texture.queryTexture(nil, nil, addr(w), addr(h))
-  var area = rect(x, y, (w.cfloat * scaleX).cint, (h.cfloat * scaleY).cint)
-  var sprite = new Sprite
-  sprite.dest = area
-  sprite.image = texture
-  g.components["Sprite"].add(sprite)
-  return sprite
-
-
-method draw*(sprite: Sprite, g: Game) {.base.} =
-  g.renderer.copy(sprite.image, nil, addr(sprite.dest))
+  sprite.image.queryTexture(nil, nil, addr(w), addr(h))
+  var area = rect(
+    sprite.position.x.cint,
+    sprite.position.y.cint,
+    (w.cfloat * sprite.scale.x.cfloat).cint,
+    (h.cfloat * sprite.scale.y.cfloat).cint)
+  g.renderer.copy(sprite.image, nil, addr(area))

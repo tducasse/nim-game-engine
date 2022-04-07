@@ -8,8 +8,6 @@ proc init(g: Game) =
   discard g.newPlayer(20, 20)
 
 
-proc update(g: Game) = discard
-
 
 const inputMap = {
   SDL_SCANCODE_DOWN: "down",
@@ -23,6 +21,5 @@ const inputMap = {
 yota.start(
   init = init,
   inputMap = inputMap,
-  update = update,
   title = "Sample game"
 )
