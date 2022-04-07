@@ -1,5 +1,4 @@
-import yota/components/sprite
-import yota/components/types
+import yota/components/[sprite, types]
 
 
 type Player* = ref object
