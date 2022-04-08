@@ -1,6 +1,7 @@
 import sdl2
 import sdl2/image
-import yota/components/[types, game]
+import yota/game
+import yota/components/types
 import tables
 import sets
 

@@ -1,5 +1,5 @@
-import types
-import sprite
+import components/types
+import components/sprite
 import tables
 
 

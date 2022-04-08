@@ -1,4 +1,5 @@
-import yota/components/[sprite, types, position, scale, game]
+import yota/components/[sprite, types, position, scale]
+import yota/game
 import tables
 import "../components/hp"
 
