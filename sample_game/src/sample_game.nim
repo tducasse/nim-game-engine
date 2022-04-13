@@ -8,7 +8,6 @@ proc init(g: Game) =
   discard g.newPlayer(20, 20)
 
 
-
 const inputMap = {
   SDL_SCANCODE_DOWN: "down",
   SDL_SCANCODE_UP: "up",

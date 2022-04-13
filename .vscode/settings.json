@@ -1,3 +1,5 @@
 {
-  "editor.formatOnSave": true
+  "[nim]": {
+    "editor.formatOnSave": true
+  }
 }

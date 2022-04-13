@@ -4,6 +4,7 @@ import yota/game
 import yota/components/types
 import tables
 import sets
+import yota/audio
 
 
 export sdl2.Scancode
@@ -48,7 +49,7 @@ proc loop() {.cdecl.} =
     return
   lastTime = newTime
   when defined(web):
-    if "quit" notin g.inputs:
+    if "quit" in g.inputs:
       emscripten_cancel_main_loop()
   g.renderer.clear()
   g.draw()
@@ -75,6 +76,10 @@ proc run(g: Game, width: cint = 640, height: cint = 480,
   discard renderer.setLogicalSize(width, height)
   defer:
     renderer.destroy()
+
+  discard audio.init()
+  defer:
+    audio.uninit()
 
   g.init(g)
 

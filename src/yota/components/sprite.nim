@@ -1,11 +1,7 @@
 import types
 import sdl2
 import sdl2/image
-import os
-
-
-proc clean(path: string): cstring =
-  result = joinPath("src", "assets", path).cstring
+import "../utils"
 
 
 proc newSprite*(
