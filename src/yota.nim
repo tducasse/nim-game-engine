@@ -4,7 +4,6 @@ import yota/game
 import yota/components/types
 import tables
 import sets
-import yota/audio
 
 
 export sdl2.Scancode
@@ -76,10 +75,6 @@ proc run(g: Game, width: cint = 640, height: cint = 480,
   discard renderer.setLogicalSize(width, height)
   defer:
     renderer.destroy()
-
-  discard audio.init()
-  defer:
-    audio.uninit()
 
   g.init(g)
 
