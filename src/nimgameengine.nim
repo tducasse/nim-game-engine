@@ -1,7 +1,7 @@
 import sdl2
 import sdl2/image
-import yota/game
-import yota/components/types
+import nimgameengine/game
+import nimgameengine/components/types
 import tables
 import sets
 
@@ -56,7 +56,7 @@ proc loop() {.cdecl.} =
 
 
 proc run(g: Game, width: cint = 640, height: cint = 480,
-    title: cstring = "Yota game") =
+    title: cstring = "nimgameengine game") =
   discard sdl2.init(INIT_VIDEO or INIT_AUDIO or INIT_TIMER or INIT_JOYSTICK or
     INIT_GAMECONTROLLER or INIT_EVENTS)
   discard image.init(IMG_INIT_PNG)

@@ -11,7 +11,7 @@ mode = ScriptMode.Verbose
 # Dependencies
 
 requires "nim >= 1.6.4"
-requires "yota"
+requires "nimgameengine"
 requires "nimhttpd >= 1.2.0"
 
 

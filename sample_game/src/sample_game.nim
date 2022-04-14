@@ -1,5 +1,5 @@
-import yota
-import yota/components/types
+import nimgameengine
+import nimgameengine/components/types
 import tables
 import sample_game/entities/player
 
@@ -17,7 +17,7 @@ const inputMap = {
 }.toTable()
 
 
-yota.start(
+nimgameengine.start(
   init = init,
   inputMap = inputMap,
   title = "Sample game"

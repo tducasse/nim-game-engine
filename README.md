@@ -1,5 +1,5 @@
-# yota-engine
-To link this folder to the namespace "yota" in your games, run `nimble develop` here. 
+# nimgameengine-engine
+To link this folder to the namespace "nimgameengine" in your games, run `nimble develop` here. 
 
 Then see [the sample_game's README](sample_game/README.md) for more information about how to run a game.
 

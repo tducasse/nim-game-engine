@@ -1,4 +1,4 @@
-import yota/components/[types, sprite, position]
+import nimgameengine/components/[types, sprite, position]
 
 type HP* = ref object of Component
   hp*: int
